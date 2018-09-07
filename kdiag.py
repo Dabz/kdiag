@@ -25,6 +25,7 @@ from utils import shell, writer
 
 import argparse
 import sys
+import tempfile
 
 
 def display():
@@ -63,7 +64,6 @@ def main():
                         help='command to perform, either gather (default), analyze or display')
 
     parser.add_argument('--directory',
-                        default="/tmp/kdiag",
                         help='input or output directory')
 
     parser.add_argument('--force', '-f', nargs="?",
@@ -73,10 +73,14 @@ def main():
     ns = parser.parse_args(sys.argv[1:])
 
     if ns.command == "gather":
-        writer.validate(ns.directory, force=ns.force)
+        directory = ns.directory
+        if directory is None:
+            directory = tempfile.mkdtemp('_output', 'kdiag_')
+
+        writer.validate(directory, force=ns.force)
         gather()
         sys.stdout.write("\n")
-        writer.write(ns.directory, environment.Environment.getInstance(), force=ns.force)
+        writer.write(directory, environment.Environment.getInstance(), force=ns.force)
     elif ns.command == "display":
         display()
     elif ns.command == "test":

@@ -13,6 +13,7 @@ import os
 import shutil
 from utils import shell
 
+
 def validate(directory, force=False):
     if not os.path.exists(directory):
         os.mkdir(directory)
@@ -39,11 +40,10 @@ def write(directory, env, force=False):
     os.write(env_file, env.serialize().encode("utf-8"))
     os.close(env_file)
 
-    for cmd, output in env.command_output.items:
+    for cmd, output in env.command_output.items():
         cmd_file = os.open("{}/output/{}".format(directory, cmd), os.O_WRONLY|os.O_CREAT|os.O_TRUNC)
         os.write(cmd_file, output.encode("utf-8"))
         os.close(cmd_file)
 
     print_thread.shutdown_flag.set()
     print_thread.join()
-
