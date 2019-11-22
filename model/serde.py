@@ -23,11 +23,11 @@ class Serde(object):
                           default=self.to_dict)
 
     def deserialize(self, kv):
-        for attr, value in enumerate(kv):
-            if not isinstance(value, {}):
+        for attr, value in kv.items():
+            if not isinstance(value, dict):
                 self.__dict__[attr] = value
             else:
-                if attr in mapper.Mapper.mapping:
+                if attr in mapper.mapping():
                     object_class = mapper.mapping()
                     obj = object_class()
                     obj.deserialize(value)

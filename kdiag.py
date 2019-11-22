@@ -20,9 +20,13 @@ from kcmd import (
     sar, kafka_version, jmx
 )
 
+from tests import (
+     limitoffiles
+)
+
 from model import environment
 
-from utils import shell, writer
+from utils import shell, writer, reader
 
 import argparse
 import sys
@@ -31,6 +35,10 @@ import tempfile
 
 def display():
     pass
+
+
+def test():
+    limitoffiles.LimitOfFiles().execute()
 
 
 def gather():
@@ -86,8 +94,18 @@ def main():
         sys.stdout.write("\n")
         writer.write(directory, environment.Environment.getInstance(), force=ns.force)
     elif ns.command == "display":
-        display()
+        directory = ns.directory
+        if directory is None:
+            raise Exception("require input directory to be specified")
+        display(directory)
     elif ns.command == "test":
+        directory = ns.directory
+        if directory is None:
+            raise Exception("require input directory to be specified")
+
+        reader.read(directory)
+        test()
+
         pass
 
 

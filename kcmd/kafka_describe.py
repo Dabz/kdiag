@@ -25,4 +25,4 @@ class KDescribeCommand(command.KDiagCommand):
             else:
                 self.topics[-1].partitions.append(topic.KafkaPartition.parse_describe_line(line))
 
-        self._env.kafka_partitions = self.topics
+        self._env.kafka_topics = self.topics

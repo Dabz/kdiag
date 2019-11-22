@@ -11,9 +11,9 @@
 """
 
 
-def mapping(self):
+def mapping():
     from model import topic, broker
-    mapping = {
+    return {
         "kafka_topics": topic.KafkaTopic,
         "kafka_brokers": broker.KafkaBroker
     }

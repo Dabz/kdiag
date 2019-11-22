@@ -23,6 +23,7 @@ class LoadingText(threading.Thread):
         self.shutdown_flag = threading.Event()
         self.setDaemon(True)
         self.succeed = True
+        self.additional_message = None
 
     def run(self):
         iteration = 0
@@ -35,4 +36,7 @@ class LoadingText(threading.Thread):
         if self.succeed:
             sys.stdout.write('\r☑  - {}\n'.format(self.text))
         else:
-            sys.stdout.write('\r☑  - {}\n'.format(self.text))
+            sys.stdout.write('\r☒  - {}\n'.format(self.text))
+
+        if self.additional_message:
+            sys.stdout.write('\r→  - {}\n'.format(self.additional_message))
