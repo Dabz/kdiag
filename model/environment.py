@@ -28,6 +28,8 @@ class Environment(serde.Serde):
         Environment.__instance = self
 
         self.kafka_jvm_options = None
+        self.kafka_jmx_enabled = False
+        self.kafka_jmx_port = None
         self.kafka_config = None
         self.kafka_config_raw = None
         self.kafka_pid = None
@@ -61,6 +63,25 @@ class Environment(serde.Serde):
 
         self.kafka_topics = None
         self.kafka_brokers = None
+        self.kafka_version = None
+        self.kafka_major_version = None
 
-        self.command_output = {}
+        self.host_sar = []
 
+        self.command_output = []
+
+    def listener(self):
+        listeners = self.kafka_config.get('listeners')
+
+        if listeners is None:
+            listeners = self.kafka_config.get('advertised.listeners')
+
+        for listener in listeners.split(","):
+            security = listener.split("://")[0]
+            port = listener.split(":")[-1]
+            hostname = listener.split(":")[-2]
+
+            if security == "PLAINTEXT":
+                return security, hostname, port
+
+        return security, hostname, port

@@ -49,6 +49,11 @@ class KPSCommand(command.KDiagCommand):
                 self.java_options["Xms"] = self.parse_jvm_memory(option[3:])
                 continue
 
+            if option.startswith("Dcom.sun.management.jmxremote.port"):
+                self._env.kafka_jmx_enabled = True
+                self._env.kafka_jmx_port = option.split("=")[-1]
+                continue
+
             if ":" in option or "=" in option:
                 splitted = option.replace("=", ":").split(":")
                 name = splitted[0]

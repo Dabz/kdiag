@@ -22,6 +22,7 @@ class LoadingText(threading.Thread):
         self.text = ltext.strip()
         self.shutdown_flag = threading.Event()
         self.setDaemon(True)
+        self.succeed = True
 
     def run(self):
         iteration = 0
@@ -29,6 +30,9 @@ class LoadingText(threading.Thread):
             sys.stdout.write('\r☐  - {} {}    \r'.format(self.text, '.' * (iteration % 4)))
             sys.stdout.flush()
             iteration += 1
-            time.sleep(0.5)
+            time.sleep(0.3)
 
-        sys.stdout.write('\r☑  - {}\n'.format(self.text))
+        if self.succeed:
+            sys.stdout.write('\r☑  - {}\n'.format(self.text))
+        else:
+            sys.stdout.write('\r☑  - {}\n'.format(self.text))

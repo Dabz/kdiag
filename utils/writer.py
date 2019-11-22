@@ -40,9 +40,9 @@ def write(directory, env, force=False):
     os.write(env_file, env.serialize().encode("utf-8"))
     os.close(env_file)
 
-    for cmd, output in env.command_output.items():
-        cmd_file = os.open("{}/output/{}".format(directory, cmd), os.O_WRONLY|os.O_CREAT|os.O_TRUNC)
-        os.write(cmd_file, output.encode("utf-8"))
+    for cmd in env.command_output:
+        cmd_file = os.open("{}/output/{}".format(directory, cmd.friendly_name()), os.O_WRONLY|os.O_CREAT|os.O_TRUNC)
+        os.write(cmd_file, cmd.output().encode("utf-8"))
         os.close(cmd_file)
 
     print_thread.shutdown_flag.set()

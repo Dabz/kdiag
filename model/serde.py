@@ -11,13 +11,14 @@
 """
 
 import json
+import copy
 from model import mapper
 
 
 class Serde(object):
 
     def serialize(self):
-        return json.dumps(self.__dict__,
+        return json.dumps(self,
                           indent=4,
                           default=self.to_dict)
 
@@ -37,4 +38,7 @@ class Serde(object):
         return self
 
     def to_dict(self, o):
-        return o.__dict__
+        result = copy.deepcopy(o.__dict__)
+        if "command_output" in result:
+            del result["command_output"]
+        return result

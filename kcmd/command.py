@@ -19,6 +19,7 @@ from utils import shell
 
 class KDiagCommand:
     def __init__(self, lcmd, largs):
+        self.succeed = True
         self._cmd = lcmd
         self._args = largs
         self._env = environment.Environment.getInstance()
@@ -39,8 +40,22 @@ class KDiagCommand:
     def execute(self):
         print_thread = shell.LoadingText("executing `%s %s`" % (self._cmd, " ".join(self._args)))
         print_thread.start()
-        self._output = subprocess.check_output([self._cmd] + self._args).decode("utf-8")
+        try:
+            self._output = subprocess.check_output([self._cmd] + self._args).decode("utf-8")
+        except subprocess.CalledProcessError:
+            self.succeed = True
+            print_thread.succeed = False
+
         command_name = self.__class__.__name__
-        self._env.command_output[command_name] = self._output
+        self._env.command_output.append(self)
         print_thread.shutdown_flag.set()
         print_thread.join()
+
+    def friendly_name(self):
+        if self._cmd == "bash":
+            if len(self._args) > 1 and self._args[0] == "-c":
+                return self._args[1].split()[0]
+        return self._cmd
+
+    def output(self):
+        return self._output

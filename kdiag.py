@@ -16,7 +16,8 @@ required information.
 
 from kcmd import (
     ps, mount, df, limit, swappiness, release, thp,
-    memory, cpu, kafka_describe, kafka_broker, lsblk
+    memory, cpu, kafka_describe, kafka_broker, lsblk,
+    sar, kafka_version, jmx
 )
 
 from model import environment
@@ -35,6 +36,7 @@ def display():
 def gather():
     env = environment.Environment.getInstance()
 
+    kafka_version.KKafkaVersionCommand()
     ps.KPSCommand()
     cpu.KCPUCommand()
     memory.KMemoryCommand()
@@ -45,6 +47,8 @@ def gather():
     swappiness.KSwappinessCommand()
     release.KReleaseCommand()
     thp.KTransparentHugePageCommand()
+    sar.KSarCommand()
+    jmx.KJMXCommand()
 
     security_enabled = "Djava.security.auth.login.config" in env.kafka_jvm_options
     jvm_options = []

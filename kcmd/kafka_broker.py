@@ -12,11 +12,16 @@
 
 from kcmd import command
 from model import broker
+from model import environment
 
 
 class KBrokerVersionCommand(command.KDiagCommand):
     def __init__(self, kafka_opts, listener):
-        command.KDiagCommand.__init__(self, "bash", ["-c", "KAFKA_OPTS={} kafka-broker-api-versions --bootstrap-server localhost:{}".format(" ".join(kafka_opts), listener.split(":")[-1])])
+        self._env = environment.Environment.getInstance()
+        security, hostname, port = self._env.listener()
+        command.KDiagCommand.__init__(self, "bash", ["-c", "KAFKA_OPTS={} kafka-broker-api-versions "
+                                                           "--bootstrap-server {}:{}".format(" ".join(kafka_opts),
+                                                                                             hostname, port)])
 
         lines = self._output.splitlines()
         self.brokers = []
